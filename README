@@ -1,0 +1,5 @@
+# AssetControl
+
+You will need to have UnityEngine.dll and UnityEditor.dll in C:\Program Files\Unity\Editor\Data\Managed if you want to build AssetControl.Unity, otherwise everything should be fine.
+
+Work in Progress
