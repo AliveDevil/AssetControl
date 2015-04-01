@@ -1,2 +1,4 @@
 language: csharp
 solution: AssetControl.sln
+script:
+- ./build.sh
