@@ -29,6 +29,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Travis|AnyCPU'">
+    <OutputPath>bin\Travis\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="ContextMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

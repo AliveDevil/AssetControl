@@ -1,4 +1,6 @@
 language: csharp
 solution: AssetControl.sln
+before_script:
+ - chmod +x build.sh
 script:
 - ./build.sh
