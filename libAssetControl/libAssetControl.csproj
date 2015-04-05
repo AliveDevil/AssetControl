@@ -38,6 +38,7 @@
     <Compile Include="AssetStore.cs" />
     <Compile Include="Network\Client.cs" />
     <Compile Include="Network\Host.cs" />
+    <Compile Include="Network\Messages\DisconnectMessage.cs" />
     <Compile Include="Network\Messages\HeloMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

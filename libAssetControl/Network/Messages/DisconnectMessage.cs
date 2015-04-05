@@ -5,8 +5,8 @@ using System.Text;
 
 namespace libAssetControl.Network.Messages
 {
-	public struct HeloMessage
+	public struct DisconnectMessage
 	{
-		public static readonly HeloMessage Message = new HeloMessage();
+		public static readonly DisconnectMessage Message = new DisconnectMessage();
 	}
 }

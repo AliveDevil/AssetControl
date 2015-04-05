@@ -7,9 +7,10 @@ using System.Text;
 
 namespace libAssetControl.Network
 {
-	public class Host
+	public class Host : IDisposable
 	{
 		private TcpListener listener;
+		private HashSet<Client> clients;
 
 		public Host(int port)
 		{
@@ -22,6 +23,16 @@ namespace libAssetControl.Network
 		{
 			TcpClient client = listener.EndAcceptTcpClient(result);
 			listener.BeginAcceptTcpClient(AcceptTcpClient, null);
+			clients.Add(new Client(client));
+		}
+
+		public void Dispose()
+		{
+			listener.Stop();
+			foreach (var client in clients)
+			{
+				client.Disconnect();
+			}
 		}
 	}
 }
