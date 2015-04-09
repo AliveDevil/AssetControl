@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace libAssetControl
 {
-	public sealed class AssetStore : IList<Asset>, IEnumerator<Asset>
+	public sealed class AssetStore : IList<Asset>, IEnumerator<Asset>, INotifyCollectionChanged
 	{
+		public event NotifyCollectionChangedEventHandler CollectionChanged;
+
 		private List<Asset> assets;
 		private Asset currentAsset;
 		private string directory;
@@ -67,6 +70,7 @@ namespace libAssetControl
 
 		public void Add(Asset item)
 		{
+
 		}
 
 		public void Clear()
@@ -137,6 +141,14 @@ namespace libAssetControl
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return this;
+		}
+
+		private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+		{
+			if(CollectionChanged != null)
+			{
+				CollectionChanged(this, e);
+			}
 		}
 	}
 }
