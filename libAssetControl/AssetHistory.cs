@@ -7,5 +7,6 @@ namespace libAssetControl
 {
 	public class AssetHistory
 	{
+
 	}
 }
