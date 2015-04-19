@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
@@ -41,11 +42,6 @@ namespace libAssetControl
 			get { return assets.Count; }
 		}
 
-		public Asset Current
-		{
-			get { return currentAsset; }
-		}
-
 		public string Directory
 		{
 			get { return directory; }
@@ -56,9 +52,16 @@ namespace libAssetControl
 			get { return false; }
 		}
 
+		public AssetStore()
+		{
+			directory = "";
+			assets = new List<Asset>();
+		}
+
 		public AssetStore(string directory)
 		{
-			assets = new List<Asset>();
+			this.directory = directory;
+			this.assets = new List<Asset>();
 		}
 
 		public void Add(Asset item)
@@ -119,7 +122,7 @@ namespace libAssetControl
 		{
 		}
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
 		}

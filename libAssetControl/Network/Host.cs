@@ -11,9 +11,11 @@ namespace libAssetControl.Network
 	{
 		private TcpListener listener;
 		private HashSet<Client> clients;
+		private Func<TcpClient, Client> clientFactory;
 
-		public Host(int port)
+		public Host(Func<TcpClient, Client> factory, int port)
 		{
+			clientFactory = factory;
 			listener = new TcpListener(new IPEndPoint(IPAddress.Any, port));
 			listener.Start();
 			listener.BeginAcceptTcpClient(AcceptTcpClient, null);
@@ -23,7 +25,7 @@ namespace libAssetControl.Network
 		{
 			TcpClient client = listener.EndAcceptTcpClient(result);
 			listener.BeginAcceptTcpClient(AcceptTcpClient, null);
-			clients.Add(new Client(client));
+			clients.Add(clientFactory(client));
 		}
 
 		public void Dispose()

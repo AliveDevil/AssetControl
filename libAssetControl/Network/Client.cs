@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
@@ -8,28 +9,18 @@ using libAssetControl.Network.Messages;
 
 namespace libAssetControl.Network
 {
-	public delegate void MessageReceivedEventHandler(Client client, object message);
+	public delegate void MessageHandler(Client client, object message);
 
-	public class Client : IDisposable
+	public abstract class Client : IDisposable
 	{
-		private delegate void MessageHandler(object message);
-
-		public event MessageReceivedEventHandler MessageReceived;
-
 		private BinaryFormatter formatter;
-
 		private Dictionary<Type, MessageHandler> messages;
 		private Action reading;
-
-		private DeflateStream readingStream;
-
 		private IAsyncResult readResult;
-
+		private DeflateStream readStream;
 		private TcpClient tcpClient;
-
 		private NetworkStream tcpStream;
-
-		private DeflateStream writingStream;
+		private DeflateStream writeStream;
 
 		public bool Connected { get; private set; }
 
@@ -52,53 +43,51 @@ namespace libAssetControl.Network
 
 		public void Dispose()
 		{
-			writingStream.Flush();
-			readingStream.Flush();
-			writingStream.Dispose();
-			readingStream.Dispose();
+			writeStream.Flush();
+			readStream.Flush();
+			writeStream.Dispose();
+			readStream.Dispose();
 			readResult.AsyncWaitHandle.WaitOne();
 			tcpStream.Dispose();
 			tcpClient.Close();
 		}
 
-		public void Write(object message)
+		public void Register<T>(MessageHandler handler)
 		{
-			formatter.Serialize(writingStream, message);
+			messages[typeof(T)] += handler;
 		}
 
-		private void HandleDisconnectMessage(object message)
+		public void Write(object message)
+		{
+			formatter.Serialize(writeStream, message);
+		}
+
+		private void HandleDisconnectMessage(Client c, object message)
 		{
 			Disconnect();
 		}
 
-		private void HandleHeloMessage(object message)
+		private void HandleHeloMessage(Client c, object message)
 		{
 			Write(HeloMessage.Message);
 		}
 
 		private void Initialize()
 		{
-			messages = new Dictionary<Type, MessageHandler>()
-			{
-				{typeof(HeloMessage), HandleHeloMessage},
-				{typeof(DisconnectMessage), HandleDisconnectMessage}
-			};
+			formatter = new BinaryFormatter();
+
+			messages = new Dictionary<Type, MessageHandler>();
+
+			Register<HeloMessage>(HandleHeloMessage);
+			Register<DisconnectMessage>(HandleDisconnectMessage);
 
 			Connected = true;
 			tcpStream = tcpClient.GetStream();
 
-			readingStream = new DeflateStream(tcpStream, CompressionMode.Decompress, true);
-			writingStream = new DeflateStream(tcpStream, CompressionMode.Compress, true);
+			readStream = new DeflateStream(tcpStream, CompressionMode.Decompress, true);
+			writeStream = new DeflateStream(tcpStream, CompressionMode.Compress, true);
 			reading = Read;
 			readResult = reading.BeginInvoke(ReadEnded, null);
-		}
-
-		private void OnMessageReceived(object message)
-		{
-			if (MessageReceived != null)
-			{
-				MessageReceived(this, message);
-			}
 		}
 
 		private void Read()
@@ -107,11 +96,11 @@ namespace libAssetControl.Network
 			{
 				if (tcpStream.DataAvailable)
 				{
-					object message = formatter.Deserialize(readingStream);
+					object message = formatter.Deserialize(readStream);
 					Type t = message.GetType();
 					if (!ResolveMessage(t, message))
 					{
-						OnMessageReceived(message);
+						Trace.TraceError("Unknown messagetype: {0}", t.Name);
 					}
 				}
 			}
@@ -127,7 +116,7 @@ namespace libAssetControl.Network
 			MessageHandler handler;
 			if (messages.TryGetValue(t, out handler))
 			{
-				handler(message);
+				handler(this, message);
 				return true;
 			}
 			return false;
