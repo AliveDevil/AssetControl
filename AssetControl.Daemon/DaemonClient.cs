@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using libAssetControl.Network;
 
 namespace AssetControl.Daemon
 {
-	class Program
+	public class DaemonClient : Client
 	{
-		static void Main(string[] args)
+		public DaemonClient(TcpClient client)
+			: base(client)
 		{
-			Host host = new Host(c => null, 13337);
+
 		}
 	}
 }
