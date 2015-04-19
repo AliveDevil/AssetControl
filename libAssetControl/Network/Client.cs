@@ -24,13 +24,13 @@ namespace libAssetControl.Network
 
 		public bool Connected { get; private set; }
 
-		public Client(IPAddress target, int port)
+		protected Client(IPAddress target, int port)
 		{
 			tcpClient = new TcpClient();
 			tcpClient.BeginConnect(target, port, TcpClientConnected, null);
 		}
 
-		internal Client(TcpClient client)
+		protected Client(TcpClient client)
 		{
 			tcpClient = client;
 			Initialize();
