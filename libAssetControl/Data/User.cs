@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace libAssetControl.Data
+﻿namespace libAssetControl.Data
 {
 	public sealed class User : StoreItem
 	{
-		public User(AssetStore store)
+		public string Name { get; set; }
+		public string Password { get; set; }
+
+		public User(AssetStore store, string name, string password)
 			: base(store)
 		{
-
+			Name = name;
+			Password = password;
 		}
 	}
 }
