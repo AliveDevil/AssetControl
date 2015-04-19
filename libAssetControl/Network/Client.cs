@@ -33,7 +33,7 @@ namespace libAssetControl.Network
 		protected Client(TcpClient client)
 		{
 			tcpClient = client;
-			Initialize();
+			EarlyInitialize();
 		}
 
 		public void Disconnect()
@@ -62,17 +62,11 @@ namespace libAssetControl.Network
 			formatter.Serialize(writeStream, message);
 		}
 
-		private void HandleDisconnectMessage(Client c, object message)
+		protected virtual void Initialize()
 		{
-			Disconnect();
 		}
 
-		private void HandleHeloMessage(Client c, object message)
-		{
-			Write(HeloMessage.Message);
-		}
-
-		private void Initialize()
+		private void EarlyInitialize()
 		{
 			formatter = new BinaryFormatter();
 
@@ -87,7 +81,18 @@ namespace libAssetControl.Network
 			readStream = new DeflateStream(tcpStream, CompressionMode.Decompress, true);
 			writeStream = new DeflateStream(tcpStream, CompressionMode.Compress, true);
 			reading = Read;
+			Initialize();
 			readResult = reading.BeginInvoke(ReadEnded, null);
+		}
+
+		private void HandleDisconnectMessage(Client c, object message)
+		{
+			Disconnect();
+		}
+
+		private void HandleHeloMessage(Client c, object message)
+		{
+			Write(HeloMessage.Message);
 		}
 
 		private void Read()
@@ -125,7 +130,7 @@ namespace libAssetControl.Network
 		private void TcpClientConnected(IAsyncResult result)
 		{
 			tcpClient.EndConnect(result);
-			Initialize();
+			EarlyInitialize();
 		}
 	}
 }
