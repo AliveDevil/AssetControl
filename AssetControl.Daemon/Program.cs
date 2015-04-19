@@ -10,7 +10,7 @@ namespace AssetControl.Daemon
 	{
 		static void Main(string[] args)
 		{
-			Host host = new Host(c => null, 13337);
+			Host host = new Host(c => new DaemonClient(c), 13337);
 		}
 	}
 }
