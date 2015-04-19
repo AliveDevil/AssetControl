@@ -12,7 +12,10 @@ namespace AssetControl.Daemon
 		public DaemonClient(TcpClient client)
 			: base(client)
 		{
+		}
 
+		protected override void Initialize()
+		{
 		}
 	}
 }
