@@ -5,7 +5,12 @@ using System.Text;
 
 namespace libAssetControl.Data
 {
-	class User
+	public sealed class User : StoreItem
 	{
+		public User(AssetStore store)
+			: base(store)
+		{
+
+		}
 	}
 }

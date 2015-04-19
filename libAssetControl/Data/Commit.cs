@@ -5,7 +5,12 @@ using System.Text;
 
 namespace libAssetControl.Data
 {
-	class Commit
+	public sealed class Commit : ProjectItem
 	{
+		public Commit(Project project)
+			: base(project)
+		{
+
+		}
 	}
 }

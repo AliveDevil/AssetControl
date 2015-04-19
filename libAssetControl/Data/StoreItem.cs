@@ -5,7 +5,13 @@ using System.Text;
 
 namespace libAssetControl.Data
 {
-	class StoreItem
+	public abstract class StoreItem
 	{
+		protected AssetStore Store { get; private set; }
+
+		public StoreItem(AssetStore store)
+		{
+			Store = store;
+		}
 	}
 }

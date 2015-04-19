@@ -5,7 +5,7 @@ using System.Text;
 
 namespace libAssetControl.Data
 {
-	class AssetStore
+	public class AssetStore
 	{
 	}
 }
