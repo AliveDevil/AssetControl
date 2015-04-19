@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,13 +12,13 @@ namespace libAssetControl.Network
 		private TcpListener listener;
 		private HashSet<Client> clients;
 		private Func<TcpClient, Client> clientFactory;
-		private ManualResetEventSlim wait;
+		private ManualResetEventSlim waitHandle;
 
 		public Host(Func<TcpClient, Client> factory, int port)
 		{
+			waitHandle = new ManualResetEventSlim();
 			clientFactory = factory;
 			clients = new HashSet<Client>();
-			wait = new ManualResetEventSlim();
 			listener = new TcpListener(new IPEndPoint(IPAddress.Any, port));
 			listener.Start();
 			listener.BeginAcceptTcpClient(AcceptTcpClient, null);
@@ -34,7 +33,7 @@ namespace libAssetControl.Network
 
 		public void Wait()
 		{
-			wait.Wait();
+			waitHandle.Wait();
 		}
 
 		public void Dispose()
@@ -44,7 +43,7 @@ namespace libAssetControl.Network
 			{
 				client.Disconnect();
 			}
-			wait.Set();
+			waitHandle.Set();
 		}
 	}
 }

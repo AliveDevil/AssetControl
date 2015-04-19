@@ -11,6 +11,7 @@
     <AssemblyName>libAssetControl</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +42,9 @@
     <Compile Include="Data\Branch.cs" />
     <Compile Include="Data\Commit.cs" />
     <Compile Include="Data\Serializer\ISerializer.cs" />
+    <Compile Include="Data\Serializer\JsonArray.cs" />
+    <Compile Include="Data\Serializer\JsonDisposable.cs" />
+    <Compile Include="Data\Serializer\JsonObject.cs" />
     <Compile Include="Data\Serializer\SerializerFactory.cs" />
     <Compile Include="Data\Serializer\V1Serializer.cs" />
     <Compile Include="Data\Project.cs" />
@@ -65,7 +69,6 @@
       <HintPath>..\packages\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

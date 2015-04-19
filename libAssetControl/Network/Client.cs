@@ -13,9 +13,11 @@ namespace libAssetControl.Network
 
 	public abstract class Client : IDisposable
 	{
+		public delegate void ReadAction();
+
 		private BinaryFormatter formatter;
 		private Dictionary<Type, MessageHandler> messages;
-		private Action reading;
+		private ReadAction reading;
 		private IAsyncResult readResult;
 		private DeflateStream readStream;
 		private TcpClient tcpClient;

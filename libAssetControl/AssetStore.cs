@@ -5,10 +5,8 @@ using System.Collections.Specialized;
 
 namespace libAssetControl
 {
-	public sealed class AssetStore : IList<Asset>, INotifyCollectionChanged
+	public sealed class AssetStore : IList<Asset>
 	{
-		public event NotifyCollectionChangedEventHandler CollectionChanged;
-
 		private List<Asset> assets;
 		private string directory;
 
@@ -125,14 +123,6 @@ namespace libAssetControl
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
-		}
-
-		private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-		{
-			if (CollectionChanged != null)
-			{
-				CollectionChanged(this, e);
-			}
 		}
 	}
 }
