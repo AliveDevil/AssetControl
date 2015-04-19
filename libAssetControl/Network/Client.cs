@@ -8,7 +8,7 @@ using libAssetControl.Network.Messages;
 
 namespace libAssetControl.Network
 {
-	public delegate void MessageReceivedEventHandler(object message);
+	public delegate void MessageReceivedEventHandler(Client client, object message);
 
 	public class Client : IDisposable
 	{
@@ -97,7 +97,7 @@ namespace libAssetControl.Network
 		{
 			if (MessageReceived != null)
 			{
-				MessageReceived(message);
+				MessageReceived(this, message);
 			}
 		}
 

@@ -41,6 +41,7 @@
     <Compile Include="Network\Messages\DisconnectMessage.cs" />
     <Compile Include="Network\Messages\HeloMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

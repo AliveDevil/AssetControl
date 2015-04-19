@@ -4,14 +4,12 @@ using System.Collections.Specialized;
 
 namespace libAssetControl
 {
-	public sealed class AssetStore : IList<Asset>, IEnumerator<Asset>, INotifyCollectionChanged
+	public sealed class AssetStore : IList<Asset>, INotifyCollectionChanged
 	{
 		public event NotifyCollectionChangedEventHandler CollectionChanged;
 
 		private List<Asset> assets;
-		private Asset currentAsset;
 		private string directory;
-		private int index;
 
 		/// <summary>
 		/// This will return an empty asset. Do not care!
@@ -58,11 +56,6 @@ namespace libAssetControl
 			get { return false; }
 		}
 
-		object System.Collections.IEnumerator.Current
-		{
-			get { return currentAsset; }
-		}
-
 		public AssetStore(string directory)
 		{
 			assets = new List<Asset>();
@@ -70,7 +63,6 @@ namespace libAssetControl
 
 		public void Add(Asset item)
 		{
-
 		}
 
 		public void Clear()
@@ -93,7 +85,10 @@ namespace libAssetControl
 
 		public IEnumerator<Asset> GetEnumerator()
 		{
-			return this;
+			for (int i = 0; i < assets.Count; i++)
+			{
+				yield return assets[i];
+			}
 		}
 
 		public int IndexOf(Asset item)
@@ -110,14 +105,6 @@ namespace libAssetControl
 		{
 		}
 
-		public bool MoveNext()
-		{
-			if (++index >= assets.Count)
-				return false;
-			currentAsset = assets[index];
-			return true;
-		}
-
 		public bool Remove(Asset item)
 		{
 			return assets.Remove(item);
@@ -128,24 +115,18 @@ namespace libAssetControl
 			assets.RemoveAt(index);
 		}
 
-		public void Reset()
-		{
-			index = -1;
-			currentAsset = null;
-		}
-
 		public void Save()
 		{
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return this;
+			return GetEnumerator();
 		}
 
 		private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
 		{
-			if(CollectionChanged != null)
+			if (CollectionChanged != null)
 			{
 				CollectionChanged(this, e);
 			}
