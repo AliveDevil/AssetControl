@@ -11,6 +11,7 @@ namespace AssetControl.Daemon
 		static void Main(string[] args)
 		{
 			Host host = new Host(c => new DaemonClient(c), 13337);
+			host.Wait();
 		}
 	}
 }
