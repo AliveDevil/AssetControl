@@ -11,7 +11,7 @@ namespace libAssetControl.Data
 		public ICollection<User> Users { get; set; }
 		public ICollection<Branch> Branches { get; set; }
 		public ICollection<Commit> Commits { get; set; }
-		public ICollection<Asset> Assets { get; set; }
+		public ICollection<Change> Changes { get; set; }
 
 		public Project(AssetStore store, string name)
 			: base(store)
@@ -20,7 +20,7 @@ namespace libAssetControl.Data
 			Users = new Collection<User>();
 			Branches = new Collection<Branch>();
 			Commits = new Collection<Commit>();
-			Assets = new Collection<Asset>();
+			Changes = new Collection<Change>();
 		}
 	}
 }
