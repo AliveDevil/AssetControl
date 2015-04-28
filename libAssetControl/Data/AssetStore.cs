@@ -24,5 +24,14 @@ namespace libAssetControl.Data
 			using (JsonWriter writer = new JsonTextWriter(textWriter))
 				SerializerFactory.LatestSerializer().Save(this, writer);
 		}
+		
+		public void Load(Stream stream)
+		{
+			using(TextReader textReader = new StreamReader(stream))
+			using(JsonReader reader = new JsonTextReader(textReader))
+			{
+				SerializerFactory.ImporterForVersion(reader.ReadAsString()).Load(this, reader);
+			}
+		}
 	}
 }
