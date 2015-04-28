@@ -17,22 +17,13 @@ namespace libAssetControl
 		/// <returns></returns>
 		public Asset this[string path]
 		{
-			get
-			{
-				return new Asset();
-			}
+			get { return new Asset(); }
 		}
 
 		public Asset this[int index]
 		{
-			get
-			{
-				return assets[index];
-			}
-			set
-			{
-				throw new InvalidOperationException();
-			}
+			get { return assets[index]; }
+			set { throw new InvalidOperationException(); }
 		}
 
 		public int Count

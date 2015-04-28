@@ -6,13 +6,17 @@ namespace libAssetControl.Data.Serializer
 	{
 		public void Load(AssetStore store, JsonReader reader)
 		{
+			while(reader.Read())
+			{
+				;
+			}
 		}
 
 		public void Save(AssetStore store, JsonWriter writer)
 		{
 			using (new JsonObject(writer))
 			{
-				WriteProperty("version", 1, writer);
+				WriteProperty("version", "1", writer);
 				using (new JsonObject(writer, "Users"))
 				using (new JsonArray(writer))
 				{

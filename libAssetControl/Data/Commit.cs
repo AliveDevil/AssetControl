@@ -9,7 +9,7 @@ namespace libAssetControl.Data
 		public Guid Id { get; set; }
 		public Branch Branch { get; set; }
 		public Commit Parent { get; set; }
-		public IEnumerable<Asset> Changes { get; set; }
+		public IEnumerable<Change> Changes { get; set; }
 
 		public Commit(Project project, Branch branch, Commit parent, Guid id)
 			: base(project)
@@ -17,7 +17,7 @@ namespace libAssetControl.Data
 			Id = id;
 			Parent = parent;
 			Branch = branch;
-			Changes = Project.Assets.Where(asset => asset.Commit == this);
+			Changes = Project.Changes.Where(asset => asset.Commit == this);
 		}
 	}
 }
