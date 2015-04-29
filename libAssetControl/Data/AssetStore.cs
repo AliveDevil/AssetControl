@@ -23,8 +23,11 @@ namespace libAssetControl.Data
 			using (TextReader textReader = new StreamReader(stream))
 			using (JsonReader reader = new JsonTextReader(textReader))
 			{
-				Read(reader, JsonToken.StartObject);
-				Read(reader, JsonToken.PropertyName, "version");
+				// skip JsonToken.StartObject
+				reader.Read();
+				// first property has to be version!
+				if (!reader.Read() || (string)reader.Value != "version")
+					return; // throw an exception!
 				SerializerFactory.ImporterForVersion(reader.ReadAsString()).Load(this, reader);
 			}
 		}
@@ -34,16 +37,6 @@ namespace libAssetControl.Data
 			using (TextWriter textWriter = new StreamWriter(stream))
 			using (JsonWriter writer = new JsonTextWriter(textWriter))
 				SerializerFactory.LatestSerializer().Save(this, writer);
-		}
-
-		private bool Read(JsonReader reader, JsonToken tokenType)
-		{
-			return reader.Read() && reader.TokenType == tokenType;
-		}
-
-		private bool Read<T>(JsonReader reader, JsonToken tokenType, T value)
-		{
-			return reader.Read() && reader.TokenType == tokenType && EqualityComparer<T>.Default.Equals((T)reader.Value, value);
 		}
 	}
 }
