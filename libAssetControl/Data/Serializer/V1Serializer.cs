@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace libAssetControl.Data.Serializer
 {
@@ -6,7 +7,7 @@ namespace libAssetControl.Data.Serializer
 	{
 		public void Load(AssetStore store, JsonReader reader)
 		{
-			while(reader.Read())
+			while (reader.Read())
 			{
 				;
 			}
@@ -17,7 +18,7 @@ namespace libAssetControl.Data.Serializer
 			using (new JsonObject(writer))
 			{
 				WriteProperty("version", "1", writer);
-				using (new JsonObject(writer, "Users"))
+				using (new JsonObject(writer, "users"))
 				using (new JsonArray(writer))
 				{
 					foreach (var user in store.Users)
@@ -29,22 +30,21 @@ namespace libAssetControl.Data.Serializer
 						}
 					}
 				}
-				using (new JsonObject(writer, "Projects"))
-				using (new JsonArray(writer))
+				using (new JsonArray(writer, "projects"))
 				{
 					foreach (var project in store.Projects)
 					{
 						using (new JsonObject(writer))
 						{
 							WriteProperty("name", project.Name, writer);
-							using (new JsonArray(writer, "Users"))
+							using (new JsonArray(writer, "users"))
 							{
 								foreach (var user in project.Users)
 								{
-									WriteProperty("user", user.Name, writer);
+									WriteValue(user.Name, writer);
 								}
 							}
-							using (new JsonArray(writer, "Branches"))
+							using (new JsonArray(writer, "branches"))
 							{
 								foreach (var branch in project.Branches)
 								{
@@ -55,7 +55,7 @@ namespace libAssetControl.Data.Serializer
 									}
 								}
 							}
-							using (new JsonArray(writer, "Commits"))
+							using (new JsonArray(writer, "commits"))
 							{
 								foreach (var commit in project.Commits)
 								{
@@ -74,7 +74,6 @@ namespace libAssetControl.Data.Serializer
 											{
 												using (new JsonObject(writer))
 												{
-
 												}
 											}
 										}
