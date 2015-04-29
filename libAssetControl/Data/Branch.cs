@@ -15,6 +15,8 @@ namespace libAssetControl.Data
 		public Branch(Project project, Guid id, string name)
 			: base(project)
 		{
+			Id = id;
+			Name = name;
 			Commits = Project.Commits.Where(commit => commit.Branch == this);
 		}
 	}

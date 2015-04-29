@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Linq;
 
 namespace libAssetControl.Data
 {
@@ -12,6 +13,11 @@ namespace libAssetControl.Data
 		public ICollection<Branch> Branches { get; set; }
 		public ICollection<Commit> Commits { get; set; }
 		public ICollection<Change> Changes { get; set; }
+
+		public Commit Commit(Guid id)
+		{
+			return Commits.Single(c => c.Id == id);
+		}
 
 		public Project(AssetStore store, string name)
 			: base(store)

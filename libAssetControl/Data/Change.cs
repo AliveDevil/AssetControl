@@ -8,10 +8,10 @@ namespace libAssetControl.Data
 	{
 		public Commit Commit { get; set; }
 
-		public Change(Project project)
+		public Change(Project project, Commit commit)
 			: base(project)
 		{
-
+			Commit = commit;
 		}
 	}
 }
