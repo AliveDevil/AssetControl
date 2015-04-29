@@ -51,6 +51,7 @@
     <Compile Include="Data\ProjectItem.cs" />
     <Compile Include="Data\StoreItem.cs" />
     <Compile Include="Data\User.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="Network\Messages\AuthMessage.cs" />
     <Compile Include="Network\Client.cs" />
     <Compile Include="Network\Host.cs" />

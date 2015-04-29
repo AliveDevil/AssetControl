@@ -18,20 +18,32 @@ namespace libAssetControl.Data
 			Projects = new Collection<Project>();
 		}
 
+		public void Load(Stream stream)
+		{
+			using (TextReader textReader = new StreamReader(stream))
+			using (JsonReader reader = new JsonTextReader(textReader))
+			{
+				Read(reader, JsonToken.StartObject);
+				Read(reader, JsonToken.PropertyName, "version");
+				SerializerFactory.ImporterForVersion(reader.ReadAsString()).Load(this, reader);
+			}
+		}
+
 		public void Save(Stream stream)
 		{
 			using (TextWriter textWriter = new StreamWriter(stream))
 			using (JsonWriter writer = new JsonTextWriter(textWriter))
 				SerializerFactory.LatestSerializer().Save(this, writer);
 		}
-		
-		public void Load(Stream stream)
+
+		private bool Read(JsonReader reader, JsonToken tokenType)
 		{
-			using(TextReader textReader = new StreamReader(stream))
-			using(JsonReader reader = new JsonTextReader(textReader))
-			{
-				SerializerFactory.ImporterForVersion(reader.ReadAsString()).Load(this, reader);
-			}
+			return reader.Read() && reader.TokenType == tokenType;
+		}
+
+		private bool Read<T>(JsonReader reader, JsonToken tokenType, T value)
+		{
+			return reader.Read() && reader.TokenType == tokenType && EqualityComparer<T>.Default.Equals((T)reader.Value, value);
 		}
 	}
 }
