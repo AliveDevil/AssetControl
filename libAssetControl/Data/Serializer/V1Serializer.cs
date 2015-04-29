@@ -17,7 +17,7 @@ namespace libAssetControl.Data.Serializer
 		{
 			using (new JsonObject(writer))
 			{
-				WriteProperty("version", "1", writer);
+				writer.Property("version", "1");
 				using (new JsonObject(writer, "users"))
 				using (new JsonArray(writer))
 				{
@@ -25,8 +25,8 @@ namespace libAssetControl.Data.Serializer
 					{
 						using (new JsonObject(writer))
 						{
-							WriteProperty("name", user.Name, writer);
-							WriteProperty("password", user.Password, writer);
+							writer.Property("name", user.Name);
+							writer.Property("password", user.Password);
 						}
 					}
 				}
@@ -36,12 +36,12 @@ namespace libAssetControl.Data.Serializer
 					{
 						using (new JsonObject(writer))
 						{
-							WriteProperty("name", project.Name, writer);
+							writer.Property("name", project.Name);
 							using (new JsonArray(writer, "users"))
 							{
 								foreach (var user in project.Users)
 								{
-									WriteValue(user.Name, writer);
+									writer.Value(user.Name);
 								}
 							}
 							using (new JsonArray(writer, "branches"))
@@ -50,8 +50,8 @@ namespace libAssetControl.Data.Serializer
 								{
 									using (new JsonObject(writer))
 									{
-										WriteProperty("id", branch.Id, writer);
-										WriteProperty("name", branch.Name, writer);
+										writer.Property("id", branch.Id);
+										writer.Property("name", branch.Name);
 									}
 								}
 							}
@@ -61,13 +61,13 @@ namespace libAssetControl.Data.Serializer
 								{
 									using (new JsonObject(writer))
 									{
-										WriteProperty("id", commit.Id, writer);
-										WriteProperty("parent", writer);
+										writer.Property("id", commit.Id);
+										writer.Property("parent");
 										if (commit.Parent != null)
-											WriteValue(commit.Parent.Id, writer);
+											writer.Value(commit.Parent.Id);
 										else
-											WriteNull(writer);
-										WriteProperty("branch", commit.Branch.Id, writer);
+											writer.Null();
+										writer.Property("branch", commit.Branch.Id);
 										using (new JsonArray(writer, "changes"))
 										{
 											foreach (var change in commit.Changes)
@@ -84,33 +84,6 @@ namespace libAssetControl.Data.Serializer
 					}
 				}
 			}
-		}
-
-		private void WriteNull(JsonWriter writer)
-		{
-			writer.WriteNull();
-		}
-
-		private void WriteNull(string name, JsonWriter writer)
-		{
-			WriteProperty(name, writer);
-			WriteNull(writer);
-		}
-
-		private void WriteProperty(string name, JsonWriter writer)
-		{
-			writer.WritePropertyName(name);
-		}
-
-		private void WriteProperty<T>(string name, T value, JsonWriter writer)
-		{
-			WriteProperty(name, writer);
-			WriteValue(value, writer);
-		}
-
-		private void WriteValue<T>(T value, JsonWriter writer)
-		{
-			writer.WriteValue(value);
 		}
 	}
 }
