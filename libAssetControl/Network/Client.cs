@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -19,10 +18,10 @@ namespace libAssetControl.Network
 		private Dictionary<Type, MessageHandler> messages;
 		private ReadAction reading;
 		private IAsyncResult readResult;
-		private DeflateStream readStream;
 		private TcpClient tcpClient;
 		private NetworkStream tcpStream;
-		private DeflateStream writeStream;
+
+		public bool Authed { get; private set; }
 
 		public bool Connected { get; private set; }
 
@@ -45,10 +44,7 @@ namespace libAssetControl.Network
 
 		public void Dispose()
 		{
-			writeStream.Flush();
-			readStream.Flush();
-			writeStream.Dispose();
-			readStream.Dispose();
+			tcpStream.Flush();
 			readResult.AsyncWaitHandle.WaitOne();
 			tcpStream.Dispose();
 			tcpClient.Close();
@@ -61,7 +57,7 @@ namespace libAssetControl.Network
 
 		public void Write(object message)
 		{
-			formatter.Serialize(writeStream, message);
+			formatter.Serialize(tcpStream, message);
 		}
 
 		protected virtual void Initialize()
@@ -76,15 +72,21 @@ namespace libAssetControl.Network
 
 			Register<HeloMessage>(HandleHeloMessage);
 			Register<DisconnectMessage>(HandleDisconnectMessage);
+			Register<AuthMessage>(HandleAuthMessage);
 
 			Connected = true;
 			tcpStream = tcpClient.GetStream();
 
-			readStream = new DeflateStream(tcpStream, CompressionMode.Decompress, true);
-			writeStream = new DeflateStream(tcpStream, CompressionMode.Compress, true);
 			reading = Read;
 			Initialize();
 			readResult = reading.BeginInvoke(ReadEnded, null);
+		}
+
+		private void HandleAuthMessage(Client client, object message)
+		{
+			if (!(message is AuthMessage)) return;
+			AuthMessage authMessage = (AuthMessage)message;
+			Authed = authMessage.IsAuthed;
 		}
 
 		private void HandleDisconnectMessage(Client c, object message)
@@ -103,7 +105,7 @@ namespace libAssetControl.Network
 			{
 				if (tcpStream.DataAvailable)
 				{
-					object message = formatter.Deserialize(readStream);
+					object message = formatter.Deserialize(tcpStream);
 					Type t = message.GetType();
 					if (!ResolveMessage(t, message))
 					{

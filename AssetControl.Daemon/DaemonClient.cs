@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using libAssetControl.Data;
 using libAssetControl.Network;
+using libAssetControl.Network.Messages;
 
 namespace AssetControl.Daemon
 {
@@ -20,6 +21,14 @@ namespace AssetControl.Daemon
 
 		protected override void Initialize()
 		{
+			Register<AuthClientMessage>(authenticate);
+		}
+
+		private void authenticate(Client client, object message)
+		{
+			if (!(message is AuthClientMessage)) return;
+			AuthClientMessage authMessage = (AuthClientMessage)message;
+
 		}
 	}
 }

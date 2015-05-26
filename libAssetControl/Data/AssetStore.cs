@@ -38,5 +38,13 @@ namespace libAssetControl.Data
 			using (JsonWriter writer = new JsonTextWriter(textWriter))
 				SerializerFactory.LatestSerializer().Save(this, writer);
 		}
+
+		public bool AuthenticateUser(string username, string password)
+		{
+			foreach (var user in Users)
+				if (user.Name.Equals(username) && user.Password == password)
+					return true;
+			return false;
+		}
 	}
 }
